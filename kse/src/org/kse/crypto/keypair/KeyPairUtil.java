@@ -50,7 +50,9 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import org.bouncycastle.jcajce.provider.asymmetric.GOST;
+import org.bouncycastle.jcajce.provider.asymmetric.ecgost12.BCECGOST3410_2012PrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ecgost12.BCECGOST3410_2012PublicKey;
+import org.bouncycastle.jce.interfaces.GOST3410PrivateKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.kse.crypto.CryptoException;
@@ -261,6 +263,15 @@ public final class KeyPairUtil {
                 return new KeyInfo(ASYMMETRIC, algorithm, prime.toString(2).length());
             } else if (algorithm.equals(EC.jce()) || algorithm.equals(ECDSA.jce())) {
                 ECPrivateKey pubk = (ECPrivateKey) privateKey;
+                ECParameterSpec spec = pubk.getParams();
+                int size = spec.getOrder().bitLength();
+                if (spec instanceof ECNamedCurveSpec) {
+                    return new KeyInfo(ASYMMETRIC, algorithm, size, ((ECNamedCurveSpec) spec).getName());
+                } else {
+                    return new KeyInfo(ASYMMETRIC, algorithm, size);
+                }
+            } else if (algorithm.equals(ECGOST3410_2012_256.jce())) {
+                BCECGOST3410_2012PrivateKey pubk = (BCECGOST3410_2012PrivateKey) privateKey;
                 ECParameterSpec spec = pubk.getParams();
                 int size = spec.getOrder().bitLength();
                 if (spec instanceof ECNamedCurveSpec) {

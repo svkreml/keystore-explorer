@@ -60,6 +60,7 @@ public class PolicyInformationTableCellRend extends DefaultTableCellRenderer {
 		JLabel cell = (JLabel) super.getTableCellRendererComponent(jtPolicyInformation, value, isSelected, hasFocus,
 				row, col);
 
+		if(value == null) return cell;
 		PolicyInformation policyInformation = (PolicyInformation) value;
 
 		try {

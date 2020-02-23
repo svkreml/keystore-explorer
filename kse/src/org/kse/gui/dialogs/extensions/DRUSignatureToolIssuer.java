@@ -19,8 +19,8 @@
  */
 package org.kse.gui.dialogs.extensions;
 
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.DERIA5String;
+import net.miginfocom.swing.MigLayout;
+import org.bouncycastle.asn1.*;
 import org.kse.gui.LnfUtil;
 import org.kse.gui.PlatformUtil;
 import org.kse.gui.error.DError;
@@ -36,163 +36,169 @@ import java.util.ResourceBundle;
 
 /**
  * Dialog used to add or edit a Netscape Comment extension.
- *
  */
 public class DRUSignatureToolIssuer extends DExtension {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static ResourceBundle res = ResourceBundle
-			.getBundle("org/kse/gui/dialogs/extensions/resources");
+    private static ResourceBundle res = ResourceBundle
+            .getBundle("org/kse/gui/dialogs/extensions/resources");
 
-	private static final String CANCEL_KEY = "CANCEL_KEY";
+    private static final String CANCEL_KEY = "CANCEL_KEY";
 
-	private JPanel jpNetscapeComment;
-	private JLabel jlNetscapeComment;
-	private JScrollPane jspNetscapeComment;
-	private JTextArea jtaNetscapeComment;
-	private JPanel jpButtons;
-	private JButton jbOK;
-	private JButton jbCancel;
+    private JTextField jtfNetscapeBaseUrl1;
+    private JTextField jtfNetscapeBaseUrl2;
+    private JTextField jtfNetscapeBaseUrl3;
+    private JTextField jtfNetscapeBaseUrl4;
 
-	private byte[] value;
+    private byte[] value;
 
-	/**
-	 * Creates a new DNetscapeComment dialog.
-	 *
-	 * @param parent
-	 *            The parent dialog
-	 */
-	public DRUSignatureToolIssuer(JDialog parent) {
-		super(parent);
-		setTitle(res.getString("DNetscapeComment.Title"));
-		initComponents();
-	}
+    /**
+     * Creates a new DRUSignatureToolIssuer dialog.
+     *
+     * @param parent The parent dialog
+     */
+    public DRUSignatureToolIssuer(JDialog parent) {
+        super(parent);
+        setTitle(res.getString("DRUSignatureToolIssuer.Title"));
+        initComponents();
+    }
 
-	/**
-	 * Creates a new DNetscapeComment dialog.
-	 *
-	 * @param parent
-	 *            The parent dialog
-	 * @param value
-	 *            Netscape Comment DER-encoded
-	 * @throws IOException
-	 *             If value could not be decoded
-	 */
-	public DRUSignatureToolIssuer(JDialog parent, byte[] value) throws IOException {
-		super(parent);
-		setTitle(res.getString("DNetscapeComment.Title"));
-		initComponents();
-		prepopulateWithValue(value);
-	}
+    /**
+     * Creates a new DRUSignatureToolIssuer dialog.
+     *
+     * @param parent The parent dialog
+     * @param value  Netscape Base URL DER-encoded
+     * @throws IOException If value could not be decoded
+     */
+    public DRUSignatureToolIssuer(JDialog parent, byte[] value) throws IOException {
+        super(parent);
+        setTitle(res.getString("DRUSignatureToolIssuer.Title"));
+        initComponents();
+        prepopulateWithValue(value);
+    }
 
-	private void initComponents() {
-		jlNetscapeComment = new JLabel(res.getString("DNetscapeComment.jlNetscapeComment.text"));
+    private void initComponents() {
+        JLabel jlNetscapeBaseUrl = new JLabel(res.getString("DRUSignatureToolIssuer.jlNetscapeBaseUrl.text"));
 
-		jtaNetscapeComment = new JTextArea();
-		jtaNetscapeComment.setFont(new Font(Font.MONOSPACED, Font.PLAIN, LnfUtil.getDefaultFontSize()));
+        jtfNetscapeBaseUrl1 = new JTextField(40);
+        jtfNetscapeBaseUrl2 = new JTextField(40);
+        jtfNetscapeBaseUrl3 = new JTextField(40);
+        jtfNetscapeBaseUrl4 = new JTextField(40);
 
-		jspNetscapeComment = PlatformUtil.createScrollPane(jtaNetscapeComment,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		jspNetscapeComment.setPreferredSize(new Dimension(300, 200));
+        JPanel jpNetscapeBaseUrl = new JPanel(new BorderLayout(5, 5));
 
-		jpNetscapeComment = new JPanel(new BorderLayout(5, 5));
+        jpNetscapeBaseUrl.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 5), new CompoundBorder(
+                new EtchedBorder(), new EmptyBorder(5, 5, 5, 5))));
 
-		jpNetscapeComment.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 5), new CompoundBorder(
-				new EtchedBorder(), new EmptyBorder(5, 5, 5, 5))));
+        jpNetscapeBaseUrl.add(jlNetscapeBaseUrl, BorderLayout.NORTH);
 
-		jpNetscapeComment.add(jlNetscapeComment, BorderLayout.NORTH);
-		jpNetscapeComment.add(jspNetscapeComment, BorderLayout.CENTER);
+        jpNetscapeBaseUrl.add(
+				new JPanel(new MigLayout()){{
+					add(jtfNetscapeBaseUrl1,"wrap");
+					add(jtfNetscapeBaseUrl2,"wrap");
+					add(jtfNetscapeBaseUrl3,"wrap");
+					add(jtfNetscapeBaseUrl4,"wrap");
+				}}
+		);
 
-		jbOK = new JButton(res.getString("DNetscapeComment.jbOK.text"));
-		jbOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				okPressed();
-			}
-		});
+        JButton jbOK = new JButton(res.getString("DRUSignatureToolIssuer.jbOK.text"));
+        jbOK.addActionListener(evt -> okPressed());
 
-		jbCancel = new JButton(res.getString("DNetscapeComment.jbCancel.text"));
-		jbCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				cancelPressed();
-			}
-		});
-		jbCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-				CANCEL_KEY);
-		jbCancel.getActionMap().put(CANCEL_KEY, new AbstractAction() {
-			private static final long serialVersionUID = 1L;
+        JButton jbCancel = new JButton(res.getString("DRUSignatureToolIssuer.jbCancel.text"));
+        jbCancel.addActionListener(evt -> cancelPressed());
+        jbCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                CANCEL_KEY);
+        jbCancel.getActionMap().put(CANCEL_KEY, new AbstractAction() {
+            private static final long serialVersionUID = 1L;
 
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				cancelPressed();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                cancelPressed();
+            }
+        });
 
-		jpButtons = PlatformUtil.createDialogButtonPanel(jbOK, jbCancel);
+        JPanel jpButtons = PlatformUtil.createDialogButtonPanel(jbOK, jbCancel);
 
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(jpNetscapeComment, BorderLayout.CENTER);
-		getContentPane().add(jpButtons, BorderLayout.SOUTH);
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(jpNetscapeBaseUrl, BorderLayout.CENTER);
+        getContentPane().add(jpButtons, BorderLayout.SOUTH);
 
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent evt) {
-				closeDialog();
-			}
-		});
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent evt) {
+                closeDialog();
+            }
+        });
 
-		setResizable(false);
+        setResizable(false);
 
-		getRootPane().setDefaultButton(jbOK);
+        getRootPane().setDefaultButton(jbOK);
 
-		pack();
-	}
+        pack();
+    }
 
-	private void prepopulateWithValue(byte[] value) throws IOException {
-		DERIA5String netscapeComment = DERIA5String.getInstance(value);
+    private void prepopulateWithValue(byte[] value) throws IOException {
+        ASN1Encodable[] lines = DERSequence.getInstance(value).toArray();
+        jtfNetscapeBaseUrl1.setText(DERUTF8String.getInstance(lines[0]).getString());
+        jtfNetscapeBaseUrl1.setCaretPosition(0);
+        jtfNetscapeBaseUrl2.setText(DERUTF8String.getInstance(lines[0]).getString());
+        jtfNetscapeBaseUrl2.setCaretPosition(0);
+        jtfNetscapeBaseUrl3.setText(DERUTF8String.getInstance(lines[0]).getString());
+        jtfNetscapeBaseUrl3.setCaretPosition(0);
+        jtfNetscapeBaseUrl4.setText(DERUTF8String.getInstance(lines[0]).getString());
+        jtfNetscapeBaseUrl4.setCaretPosition(0);
+    }
 
-		jtaNetscapeComment.setText(netscapeComment.getString());
-		jtaNetscapeComment.setCaretPosition(0);
-	}
+    private void okPressed() {
+        String netscapeBaseUrlStr1 = jtfNetscapeBaseUrl1.getText().trim();
+        String netscapeBaseUrlStr2 = jtfNetscapeBaseUrl2.getText().trim();
+        String netscapeBaseUrlStr3 = jtfNetscapeBaseUrl3.getText().trim();
+        String netscapeBaseUrlStr4 = jtfNetscapeBaseUrl4.getText().trim();
 
-	private void okPressed() {
-		String netscapeCommentStr = jtaNetscapeComment.getText().trim();
+        if (netscapeBaseUrlStr1.length() == 0
+                || netscapeBaseUrlStr2.length() == 0
+                || netscapeBaseUrlStr3.length() == 0
+                || netscapeBaseUrlStr4.length() == 0) {
+            JOptionPane.showMessageDialog(this, res.getString("DRUSignatureToolIssuer.ValueReq.message"), getTitle(),
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-		if (netscapeCommentStr.length() == 0) {
-			JOptionPane.showMessageDialog(this, res.getString("DNetscapeComment.ValueReq.message"), getTitle(),
-					JOptionPane.WARNING_MESSAGE);
-			return;
-		}
 
-		DERIA5String netscapeComment = new DERIA5String(netscapeCommentStr);
+        DERSequence derSequence = new DERSequence(new ASN1EncodableVector() {{
+            add(new DERUTF8String(netscapeBaseUrlStr1));
+            add(new DERUTF8String(netscapeBaseUrlStr2));
+            add(new DERUTF8String(netscapeBaseUrlStr3));
+            add(new DERUTF8String(netscapeBaseUrlStr4));
+        }}
+        );
 
-		try {
-			value = netscapeComment.getEncoded(ASN1Encoding.DER);
-		} catch (IOException e) {
-			DError.displayError(this, e);
-			return;
-		}
+        try {
+            this.value = derSequence.getEncoded(ASN1Encoding.DER);
+        } catch (IOException e) {
+            DError.displayError(this, e);
+            return;
+        }
 
-		closeDialog();
-	}
+        closeDialog();
+    }
 
-	/**
-	 * Get extension value DER-encoded.
-	 *
-	 * @return Extension value
-	 */
-	@Override
-	public byte[] getValue() {
-		return value;
-	}
+    /**
+     * Get extension value DER-encoded.
+     *
+     * @return Extension value
+     */
+    @Override
+    public byte[] getValue() {
+        return value;
+    }
 
-	private void cancelPressed() {
-		closeDialog();
-	}
+    private void cancelPressed() {
+        closeDialog();
+    }
 
-	private void closeDialog() {
-		setVisible(false);
-		dispose();
-	}
+    private void closeDialog() {
+        setVisible(false);
+        dispose();
+    }
 }

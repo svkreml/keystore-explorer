@@ -19,30 +19,6 @@
  */
 package org.kse.gui.dialogs.extensions;
 
-import static org.kse.crypto.x509.X509ExtensionType.AUTHORITY_INFORMATION_ACCESS;
-import static org.kse.crypto.x509.X509ExtensionType.AUTHORITY_KEY_IDENTIFIER;
-import static org.kse.crypto.x509.X509ExtensionType.BASIC_CONSTRAINTS;
-import static org.kse.crypto.x509.X509ExtensionType.CERTIFICATE_POLICIES;
-import static org.kse.crypto.x509.X509ExtensionType.EXTENDED_KEY_USAGE;
-import static org.kse.crypto.x509.X509ExtensionType.INHIBIT_ANY_POLICY;
-import static org.kse.crypto.x509.X509ExtensionType.ISSUER_ALTERNATIVE_NAME;
-import static org.kse.crypto.x509.X509ExtensionType.KEY_USAGE;
-import static org.kse.crypto.x509.X509ExtensionType.NAME_CONSTRAINTS;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_BASE_URL;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_CA_POLICY_URL;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_CA_REVOCATION_URL;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_CERTIFICATE_RENEWAL_URL;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_CERTIFICATE_TYPE;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_COMMENT;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_REVOCATION_URL;
-import static org.kse.crypto.x509.X509ExtensionType.NETSCAPE_SSL_SERVER_NAME;
-import static org.kse.crypto.x509.X509ExtensionType.POLICY_CONSTRAINTS;
-import static org.kse.crypto.x509.X509ExtensionType.POLICY_MAPPINGS;
-import static org.kse.crypto.x509.X509ExtensionType.PRIVATE_KEY_USAGE_PERIOD;
-import static org.kse.crypto.x509.X509ExtensionType.SUBJECT_ALTERNATIVE_NAME;
-import static org.kse.crypto.x509.X509ExtensionType.SUBJECT_INFORMATION_ACCESS;
-import static org.kse.crypto.x509.X509ExtensionType.SUBJECT_KEY_IDENTIFIER;
-
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
@@ -76,6 +52,8 @@ import org.kse.crypto.x509.X509ExtensionType;
 import org.kse.gui.JEscDialog;
 import org.kse.gui.PlatformUtil;
 
+import static org.kse.crypto.x509.X509ExtensionType.*;
+
 /**
  * Dialog used to retrieve the type to use in the addition of a new extension.
  *
@@ -91,7 +69,7 @@ public class DAddExtensionType extends JEscDialog {
 			ISSUER_ALTERNATIVE_NAME, KEY_USAGE, NAME_CONSTRAINTS, NETSCAPE_BASE_URL, NETSCAPE_CA_POLICY_URL,
 			NETSCAPE_CA_REVOCATION_URL, NETSCAPE_CERTIFICATE_RENEWAL_URL, NETSCAPE_CERTIFICATE_TYPE, NETSCAPE_COMMENT,
 			NETSCAPE_REVOCATION_URL, NETSCAPE_SSL_SERVER_NAME, POLICY_CONSTRAINTS, POLICY_MAPPINGS,
-			PRIVATE_KEY_USAGE_PERIOD, SUBJECT_ALTERNATIVE_NAME, SUBJECT_INFORMATION_ACCESS, SUBJECT_KEY_IDENTIFIER };
+			PRIVATE_KEY_USAGE_PERIOD, SUBJECT_ALTERNATIVE_NAME, SUBJECT_INFORMATION_ACCESS, SUBJECT_KEY_IDENTIFIER, SIGNATURE_TOOL_OWNER, SIGNATURE_TOOL_ISSUER, CRL_DISTRIBUTION_POINTS };
 
 	private JPanel jpExtensionTypes;
 	private JLabel jlExtensionTypes;

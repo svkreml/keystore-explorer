@@ -551,11 +551,14 @@ public class DAddExtensions extends JEscDialog {
             case SUBJECT_INFORMATION_ACCESS:
                 dExtension = new DSubjectInformationAccess(this);
                 break;
-            case MEANS_OF_ELECTRONIC_SIGNATURE_TOOL_OWNER:
+            case SIGNATURE_TOOL_OWNER:
                 dExtension = new DRUSignatureToolOwner(this);
                 break;
-            case MEANS_OF_ELECTRONIC_SIGNATURE_AND_PUBLISHER_CA:
+            case SIGNATURE_TOOL_ISSUER:
                 dExtension = new DRUSignatureToolIssuer(this);
+                break;
+                case CRL_DISTRIBUTION_POINTS:
+                dExtension = new DCRLDistributionPoints(this);
                 break;
             default:
                 return;
@@ -690,11 +693,14 @@ public class DAddExtensions extends JEscDialog {
                     case SUBJECT_KEY_IDENTIFIER:
                         dExtension = new DSubjectKeyIdentifier(this, extensionValue, subjectPublicKey);
                         break;
-                    case MEANS_OF_ELECTRONIC_SIGNATURE_TOOL_OWNER:
+                    case SIGNATURE_TOOL_OWNER:
                         dExtension = new DRUSignatureToolOwner(this, extensionValue);
                         break;
-                    case MEANS_OF_ELECTRONIC_SIGNATURE_AND_PUBLISHER_CA:
+                    case SIGNATURE_TOOL_ISSUER:
                         dExtension = new DRUSignatureToolIssuer(this, extensionValue);
+                        break;
+                    case CRL_DISTRIBUTION_POINTS:
+                        dExtension = new DCRLDistributionPoints(this, extensionValue);
                         break;
                     default:
                         return;

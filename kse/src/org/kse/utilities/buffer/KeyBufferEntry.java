@@ -42,8 +42,6 @@ public class KeyBufferEntry extends BufferEntry {
 	 *            Key
 	 * @param password
 	 *            Key password
-	 * @param certificateChain
-	 *            Certificate chain
 	 */
 	public KeyBufferEntry(String name, boolean cut, Key key, Password password) {
 		super(name, cut);

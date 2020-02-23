@@ -20,10 +20,9 @@
 package org.kse.gui.dialogs.extensions;
 
 import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.DERIA5String;
-import org.bouncycastle.asn1.DERUTF8String;
-import org.kse.gui.LnfUtil;
+import org.bouncycastle.asn1.x509.*;
 import org.kse.gui.PlatformUtil;
+import org.kse.gui.crypto.generalname.JGeneralNames;
 import org.kse.gui.error.DError;
 
 import javax.swing.*;
@@ -36,9 +35,9 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 /**
- * Dialog used to add or edit a Netscape Comment extension.
+ * Dialog used to add or edit an Subject Alternative Name extension.
  */
-public class DRUSignatureToolOwner extends DExtension {
+public class DCRLDistributionPoints extends DExtension {
     private static final long serialVersionUID = 1L;
 
     private static ResourceBundle res = ResourceBundle
@@ -46,52 +45,69 @@ public class DRUSignatureToolOwner extends DExtension {
 
     private static final String CANCEL_KEY = "CANCEL_KEY";
 
-    private JTextField jtfRUSignatureToolOwner;
+    private JGeneralNames jgnAlternativeName;
 
     private byte[] value;
 
     /**
-     * Creates a new DRUSignatureToolOwner dialog.
+     * Creates a new DCRLDistributionPoints dialog.
      *
      * @param parent The parent dialog
      */
-    public DRUSignatureToolOwner(JDialog parent) {
+    public DCRLDistributionPoints(JDialog parent) {
         super(parent);
-        setTitle(res.getString("DRUSignatureToolOwner.Title"));
+
+        setTitle(res.getString("DCRLDistributionPoints.Title"));
         initComponents();
     }
 
     /**
-     * Creates a new DRUSignatureToolOwner dialog.
+     * Creates a new DCRLDistributionPoints dialog.
      *
      * @param parent The parent dialog
-     * @param value  Netscape Base URL DER-encoded
+     * @param value  Subject Alternative Name DER-encoded
      * @throws IOException If value could not be decoded
      */
-    public DRUSignatureToolOwner(JDialog parent, byte[] value) throws IOException {
+    public DCRLDistributionPoints(JDialog parent, byte[] value) throws IOException {
         super(parent);
-        setTitle(res.getString("DRUSignatureToolOwner.Title"));
+        setTitle(res.getString("DCRLDistributionPoints.Title"));
         initComponents();
         prepopulateWithValue(value);
     }
 
     private void initComponents() {
-        JLabel jlRUSignatureToolOwner = new JLabel(res.getString("DRUSignatureToolOwner.jlRUSignatureToolOwner.text"));
+        JLabel jlAlternativeName = new JLabel(res.getString("DCRLDistributionPoints.jlCRLDistributionPoint.text"));
 
-        jtfRUSignatureToolOwner = new JTextField(40);
+        GridBagConstraints gbc_jlAlternativeName = new GridBagConstraints();
+        gbc_jlAlternativeName.gridx = 0;
+        gbc_jlAlternativeName.gridy = 1;
+        gbc_jlAlternativeName.gridwidth = 1;
+        gbc_jlAlternativeName.gridheight = 1;
+        gbc_jlAlternativeName.insets = new Insets(5, 5, 5, 5);
+        gbc_jlAlternativeName.anchor = GridBagConstraints.NORTHEAST;
 
-        JPanel jpRUSignatureToolOwner = new JPanel(new BorderLayout(5, 5));
+        jgnAlternativeName = new JGeneralNames(res.getString("DCRLDistributionPoints.CRLDistributionPoints.Title"));
+        jgnAlternativeName.setPreferredSize(new Dimension(400, 150));
 
-        jpRUSignatureToolOwner.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 5), new CompoundBorder(
-                new EtchedBorder(), new EmptyBorder(5, 5, 5, 5))));
+        GridBagConstraints gbc_jgnAlternativeName = new GridBagConstraints();
+        gbc_jgnAlternativeName.gridx = 1;
+        gbc_jgnAlternativeName.gridy = 1;
+        gbc_jgnAlternativeName.gridwidth = 1;
+        gbc_jgnAlternativeName.gridheight = 1;
+        gbc_jgnAlternativeName.insets = new Insets(5, 5, 5, 5);
+        gbc_jgnAlternativeName.anchor = GridBagConstraints.WEST;
 
-        jpRUSignatureToolOwner.add(jlRUSignatureToolOwner, BorderLayout.NORTH);
-        jpRUSignatureToolOwner.add(jtfRUSignatureToolOwner, BorderLayout.CENTER);
+        JPanel jpSubjectAlternativeName = new JPanel(new GridBagLayout());
 
-        JButton jbOK = new JButton(res.getString("DRUSignatureToolOwner.jbOK.text"));
+        jpSubjectAlternativeName.setBorder(new CompoundBorder(new EmptyBorder(5, 5, 5, 5), new EtchedBorder()));
+
+        jpSubjectAlternativeName.add(jlAlternativeName, gbc_jlAlternativeName);
+        jpSubjectAlternativeName.add(jgnAlternativeName, gbc_jgnAlternativeName);
+
+        JButton jbOK = new JButton(res.getString("DCRLDistributionPoints.jbOK.text"));
         jbOK.addActionListener(evt -> okPressed());
 
-        JButton jbCancel = new JButton(res.getString("DRUSignatureToolOwner.jbCancel.text"));
+        JButton jbCancel = new JButton(res.getString("DCRLDistributionPoints.jbCancel.text"));
         jbCancel.addActionListener(evt -> cancelPressed());
         jbCancel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 CANCEL_KEY);
@@ -107,7 +123,7 @@ public class DRUSignatureToolOwner extends DExtension {
         JPanel jpButtons = PlatformUtil.createDialogButtonPanel(jbOK, jbCancel);
 
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(jpRUSignatureToolOwner, BorderLayout.CENTER);
+        getContentPane().add(jpSubjectAlternativeName, BorderLayout.CENTER);
         getContentPane().add(jpButtons, BorderLayout.SOUTH);
 
         addWindowListener(new WindowAdapter() {
@@ -125,25 +141,32 @@ public class DRUSignatureToolOwner extends DExtension {
     }
 
     private void prepopulateWithValue(byte[] value) throws IOException {
-        DERUTF8String RUSignatureToolOwner = DERUTF8String.getInstance(value);
+        GeneralNames subjectAlternativeName = GeneralNames.getInstance(value);
 
-        jtfRUSignatureToolOwner.setText(RUSignatureToolOwner.getString());
-        jtfRUSignatureToolOwner.setCaretPosition(0);
+        if (subjectAlternativeName != null) {
+            jgnAlternativeName.setGeneralNames(subjectAlternativeName);
+        }
     }
 
     private void okPressed() {
-        String RUSignatureToolOwnerStr = jtfRUSignatureToolOwner.getText().trim();
 
-        if (RUSignatureToolOwnerStr.length() == 0) {
-            JOptionPane.showMessageDialog(this, res.getString("DRUSignatureToolOwner.ValueReq.message"), getTitle(),
+        GeneralNames alternativeName = jgnAlternativeName.getGeneralNames();
+
+        if (alternativeName.getNames().length == 0) {
+            JOptionPane.showMessageDialog(this, res.getString("DCRLDistributionPoints.ValueReq.message"), getTitle(),
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        DERUTF8String value = new DERUTF8String(RUSignatureToolOwnerStr);
+        DistributionPoint[] distPoints = new DistributionPoint[alternativeName.getNames().length];
+        for (int i = 0; i < alternativeName.getNames().length; i++) {
+            DistributionPointName distributionPoint = new DistributionPointName(new GeneralNames(alternativeName.getNames()[i]));
+            distPoints[i] = new DistributionPoint(distributionPoint, null, null);
+        }
+
 
         try {
-            this.value = value.getEncoded(ASN1Encoding.DER);
+            value = new CRLDistPoint(distPoints).getEncoded(ASN1Encoding.DER);
         } catch (IOException e) {
             DError.displayError(this, e);
             return;

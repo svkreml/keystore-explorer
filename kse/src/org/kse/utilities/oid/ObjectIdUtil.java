@@ -2276,6 +2276,14 @@ public class ObjectIdUtil {
 		oidToNameMapping.put("1.3.6.1.4.1.40869.1.1.22.3", "TWCA EV policy");
 		oidToNameMapping.put("2.16.840.1.113733.1.7.23.6", "VeriSign EV policy");
 		oidToNameMapping.put("2.16.840.1.114171.500.9", "Wells Fargo EV policy");
+
+		// RUSSIAN GOST
+		oidToNameMapping.put("1.2.643.100.113.1", "KC1");
+		oidToNameMapping.put("1.2.643.100.113.2", "KC2");
+		oidToNameMapping.put("1.2.643.100.113.3", "KC3");
+		oidToNameMapping.put("1.2.643.100.113.4", "KB1");
+		oidToNameMapping.put("1.2.643.100.113.5", "KB2");
+		oidToNameMapping.put("1.2.643.100.113.6", "KA");
 	}
 
 	/**
