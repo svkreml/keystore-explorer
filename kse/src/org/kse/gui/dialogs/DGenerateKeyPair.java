@@ -87,6 +87,8 @@ public class DGenerateKeyPair extends JEscDialog {
 	private JLabel jlECCurve;
 	private JComboBox<String> jcbECCurve;
 
+	private JRadioButton jrbGOST;
+
 	private JButton jbOK;
 	private JButton jbCancel;
 
@@ -149,10 +151,15 @@ public class DGenerateKeyPair extends JEscDialog {
 			jrbEC.setToolTipText(res.getString("DGenerateKeyPair.jrbEC.na.tooltip"));
 		}
 
+		jrbGOST =  new JRadioButton("GOST2012_256", true);
+		PlatformUtil.setMnemonic(jrbGOST, 'G');
+
+
 		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(jrbRSA);
 		buttonGroup.add(jrbDSA);
 		buttonGroup.add(jrbEC);
+		buttonGroup.add(jrbGOST);
 
 		jlECCurveSet = new JLabel(res.getString("DGenerateKeyPair.jlECCurveSet.text"));
 		jlECCurveSet.setToolTipText(res.getString("DGenerateKeyPair.jlECCurveSet.tooltip"));
@@ -211,8 +218,9 @@ public class DGenerateKeyPair extends JEscDialog {
 		jpContent.add(jlECCurveSet, "");
 		jpContent.add(jcbECCurveSet, "growx, wrap");
 		jpContent.add(jlECCurve, "skip");
-		jpContent.add(jcbECCurve, "growx");
+		jpContent.add(jcbECCurve, "growx, wrap");
 
+		jpContent.add(jrbGOST, "");
 
 		jcbECCurveSet.addItemListener(new ItemListener() {
 			@Override
@@ -236,6 +244,13 @@ public class DGenerateKeyPair extends JEscDialog {
 		});
 
 		jrbEC.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent evt) {
+				enableDisableElements();
+			}
+		});
+
+		jrbGOST.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent evt) {
 				enableDisableElements();
@@ -399,7 +414,9 @@ public class DGenerateKeyPair extends JEscDialog {
 	public String getCurveName() {
 		return (String) jcbECCurve.getModel().getSelectedItem();
 	}
-
+	public String getGostCurveName() {
+		return (String) "GostR3410-2001-CryptoPro-A";
+	}
 	/**
 	 * Get the key pair type chosen.
 	 *
@@ -413,6 +430,9 @@ public class DGenerateKeyPair extends JEscDialog {
 		if (jrbDSA.isSelected()) {
 			return KeyPairType.DSA;
 		}
+
+		if(jrbGOST.isSelected())
+			return KeyPairType.ECGOST3410_2012_256;
 
 		return KeyPairType.EC;
 

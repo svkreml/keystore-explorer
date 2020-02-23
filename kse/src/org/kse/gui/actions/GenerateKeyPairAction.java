@@ -126,7 +126,12 @@ public class GenerateKeyPairAction extends KeyStoreExplorerAction implements His
 			keyPairType = dGenerateKeyPair.getKeyPairType();
 			DGeneratingKeyPair dGeneratingKeyPair;
 
-			if (keyPairType != KeyPairType.EC) {
+			if(keyPairType == KeyPairType.ECGOST3410_2012_256)
+			{
+				String curveName = dGenerateKeyPair.getGostCurveName();
+				dGeneratingKeyPair = new DGeneratingKeyPair(frame, keyPairType, curveName, provider);
+			}
+			else if (keyPairType != KeyPairType.EC) {
 				keyPairSize = dGenerateKeyPair.getKeyPairSize();
 				dGeneratingKeyPair = new DGeneratingKeyPair(frame, keyPairType, keyPairSize, provider);
 

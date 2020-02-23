@@ -66,6 +66,9 @@ public class DialogHelper {
 		case DSA:
 			sigAlgs = SignatureType.dsaSignatureTypes();
 			break;
+		case ECGOST3410_2012_256:
+			sigAlgs = SignatureType.gostSignatureTypes();
+			break;
 		case EC:
 		default:
 			sigAlgs = SignatureType.ecdsaSignatureTypes();

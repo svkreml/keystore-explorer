@@ -351,6 +351,13 @@ public enum X509ExtensionType {
 
 	GO_CT_SCTS("1.3.6.1.4.1.11129.2.4.2", "SignedCertificateTimestampList"),
 
+	// ////////////////////////////////
+	// RUSSIAN GOST
+	// ////////////////////////////////
+	MEANS_OF_ELECTRONIC_SIGNATURE_TOOL_OWNER("1.2.643.100.111", "MeansOfElectronicSignatureTool"),
+	MEANS_OF_ELECTRONIC_SIGNATURE_AND_PUBLISHER_CA("1.2.643.100.112", "MeansOfElectronicSignatureAndPublisherCA"),
+
+
 	UNKNOWN("0", "unknown");
 
 

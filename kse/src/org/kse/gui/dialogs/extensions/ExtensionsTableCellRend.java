@@ -66,7 +66,7 @@ public class ExtensionsTableCellRend extends DefaultTableCellRenderer {
 		if (col == 0) {
 			ImageIcon icon = null;
 
-			if (((Boolean) value).booleanValue()) {
+			if (value!=null && ((Boolean) value).booleanValue()) {
 				icon = new ImageIcon(getClass().getResource(
 						"images/table/crit_ext.png"));
 				cell.setToolTipText(res.getString("ExtensionsTableCellRend.CriticalExtension.tooltip"));

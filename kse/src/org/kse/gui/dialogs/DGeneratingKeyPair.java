@@ -207,7 +207,10 @@ public class DGeneratingKeyPair extends JEscDialog {
 		public void run() {
 			try {
 				// RSA, DSA or EC?
-				if (keyPairType != KeyPairType.EC) {
+				if(keyPairType == KeyPairType.ECGOST3410_2012_256){
+					keyPair = KeyPairUtil.generateGostKeyPair(curveName, provider);
+				}
+				else if (keyPairType != KeyPairType.EC) {
 					keyPair = KeyPairUtil.generateKeyPair(keyPairType, keySize, provider);
 				} else {
 					keyPair = KeyPairUtil.generateECKeyPair(curveName, provider);

@@ -22,7 +22,7 @@ package org.kse.crypto.x509;
 
 import java.util.Hashtable;
 
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.x500.AttributeTypeAndValue;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -40,8 +40,24 @@ public class KseX500NameStyle extends BCStyle {
 	private static final ASN1ObjectIdentifier DNQ = new ASN1ObjectIdentifier("2.5.4.46");
 
 	private static final Hashtable<ASN1ObjectIdentifier, String> DEFAULT_SYMBOLS = new Hashtable<>();
+	private static final Hashtable<String, ASN1ObjectIdentifier> DefaultLookUp = new Hashtable<>();;
+
+	// ОГРН (1.2.643.100.1): OGRN ::= NUMERIC STRING SIZE 13
+	public static final ASN1ObjectIdentifier OGRN = (new ASN1ObjectIdentifier("1.2.643.100.1")).intern();
+	// СНИЛС (1.2.643.100.3): SNILS ::= NUMERIC STRING SIZE 11
+	public static final ASN1ObjectIdentifier SNILS = (new ASN1ObjectIdentifier("1.2.643.100.3")).intern();
+	// ОГРНИП (1.2.643.100.5): OGRNIP ::= NUMERIC STRING SIZE 15
+	public static final ASN1ObjectIdentifier OGRNIP = (new ASN1ObjectIdentifier("1.2.643.100.5")).intern();
+	// ИНН (1.2.643.3.131.1.1): INN ::= NUMERIC STRING SIZE 12
+	public static final ASN1ObjectIdentifier INN = (new ASN1ObjectIdentifier("1.2.643.3.131.1.1")).intern();
 
 	static {
+		DEFAULT_SYMBOLS.put(OGRN, "ОГРН");
+		DEFAULT_SYMBOLS.put(INN, "ИНН");
+		DEFAULT_SYMBOLS.put(SNILS, "СНИЛС");
+		DEFAULT_SYMBOLS.put(OGRNIP, "ОГРНИП");
+
+
 		DEFAULT_SYMBOLS.put(C, "C");
 		DEFAULT_SYMBOLS.put(O, "O");
 		DEFAULT_SYMBOLS.put(T, "T");
@@ -74,6 +90,53 @@ public class KseX500NameStyle extends BCStyle {
 		DEFAULT_SYMBOLS.put(BUSINESS_CATEGORY, "BusinessCategory");
 		DEFAULT_SYMBOLS.put(TELEPHONE_NUMBER, "TelephoneNumber");
 		DEFAULT_SYMBOLS.put(NAME, "Name");
+
+
+		DefaultLookUp.put("огрн", OGRN);
+		DefaultLookUp.put("инн", INN);
+		DefaultLookUp.put("снилс", SNILS);
+		DefaultLookUp.put("огрнип", OGRNIP);
+		DefaultLookUp.put("ogrn", OGRN);
+		DefaultLookUp.put("inn", INN);
+		DefaultLookUp.put("snils", SNILS);
+		DefaultLookUp.put("ogrnip", OGRNIP);
+
+
+		DefaultLookUp.put("c", C);
+		DefaultLookUp.put("o", O);
+		DefaultLookUp.put("t", T);
+		DefaultLookUp.put("ou", OU);
+		DefaultLookUp.put("cn", CN);
+		DefaultLookUp.put("l", L);
+		DefaultLookUp.put("st", ST);
+		DefaultLookUp.put("sn", SURNAME);
+		DefaultLookUp.put("serialnumber", SERIALNUMBER);
+		DefaultLookUp.put("street", STREET);
+		DefaultLookUp.put("emailaddress", E);
+		DefaultLookUp.put("dc", DC);
+		DefaultLookUp.put("e", E);
+		DefaultLookUp.put("uid", UID);
+		DefaultLookUp.put("surname", SURNAME);
+		DefaultLookUp.put("givenname", GIVENNAME);
+		DefaultLookUp.put("initials", INITIALS);
+		DefaultLookUp.put("generation", GENERATION);
+		DefaultLookUp.put("unstructuredaddress", UnstructuredAddress);
+		DefaultLookUp.put("unstructuredname", UnstructuredName);
+		DefaultLookUp.put("uniqueidentifier", UNIQUE_IDENTIFIER);
+		DefaultLookUp.put("dn", DN_QUALIFIER);
+		DefaultLookUp.put("pseudonym", PSEUDONYM);
+		DefaultLookUp.put("postaladdress", POSTAL_ADDRESS);
+		DefaultLookUp.put("nameatbirth", NAME_AT_BIRTH);
+		DefaultLookUp.put("countryofcitizenship", COUNTRY_OF_CITIZENSHIP);
+		DefaultLookUp.put("countryofresidence", COUNTRY_OF_RESIDENCE);
+		DefaultLookUp.put("gender", GENDER);
+		DefaultLookUp.put("placeofbirth", PLACE_OF_BIRTH);
+		DefaultLookUp.put("dateofbirth", DATE_OF_BIRTH);
+		DefaultLookUp.put("postalcode", POSTAL_CODE);
+		DefaultLookUp.put("businesscategory", BUSINESS_CATEGORY);
+		DefaultLookUp.put("telephonenumber", TELEPHONE_NUMBER);
+		DefaultLookUp.put("name", NAME);
+		DefaultLookUp.put("organizationidentifier", ORGANIZATION_IDENTIFIER);
 	}
 
 	private KseX500NameStyle() {
@@ -136,5 +199,30 @@ public class KseX500NameStyle extends BCStyle {
 		}
 
 		return buf.toString();
+	}
+
+	@Override
+	protected ASN1Encodable encodeStringValue(ASN1ObjectIdentifier oid,
+											  String value) {
+		if (oid.equals(EmailAddress) || oid.equals(DC))
+		{
+			return new DERIA5String(value);
+		}
+		else if (oid.equals(DATE_OF_BIRTH))  // accept time string as well as # (for compatibility)
+		{
+			return new ASN1GeneralizedTime(value);
+		}
+		else if (oid.equals(C) || oid.equals(SN) || oid.equals(DN_QUALIFIER)
+				|| oid.equals(TELEPHONE_NUMBER))
+		{
+			return new DERPrintableString(value);
+		}
+
+		else if (oid.equals(INN) ||oid.equals(OGRN)||oid.equals(SNILS)||oid.equals(OGRNIP))
+		{
+			return new DERNumericString(value);
+		}
+
+		return super.encodeStringValue(oid, value);
 	}
 }

@@ -19,22 +19,13 @@
  */
 package org.kse.crypto.signing;
 
-import static org.kse.crypto.digest.DigestType.MD2;
-import static org.kse.crypto.digest.DigestType.MD5;
-import static org.kse.crypto.digest.DigestType.RIPEMD128;
-import static org.kse.crypto.digest.DigestType.RIPEMD160;
-import static org.kse.crypto.digest.DigestType.RIPEMD256;
-import static org.kse.crypto.digest.DigestType.SHA1;
-import static org.kse.crypto.digest.DigestType.SHA224;
-import static org.kse.crypto.digest.DigestType.SHA256;
-import static org.kse.crypto.digest.DigestType.SHA384;
-import static org.kse.crypto.digest.DigestType.SHA512;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import org.kse.crypto.digest.DigestType;
+
+import static org.kse.crypto.digest.DigestType.*;
 
 /**
  * Enumeration of Signature Types supported by the X509CertUtil class.
@@ -64,7 +55,8 @@ public enum SignatureType {
 	SHA224_ECDSA("SHA224withECDSA", "1.2.840.10045.4.3.1", SHA224, "SignatureType.Sha224WithEcDsa"),
 	SHA256_ECDSA("SHA256withECDSA", "1.2.840.10045.4.3.2", SHA256, "SignatureType.Sha256WithEcDsa"),
 	SHA384_ECDSA("SHA384withECDSA", "1.2.840.10045.4.3.3", SHA384, "SignatureType.Sha384WithEcDsa"),
-	SHA512_ECDSA("SHA512withECDSA", "1.2.840.10045.4.3.4", SHA512, "SignatureType.Sha512WithEcDsa");
+	SHA512_ECDSA("SHA512withECDSA", "1.2.840.10045.4.3.4", SHA512, "SignatureType.Sha512WithEcDsa"),
+	GOST3411_2012("GOST3411-2012-256WITHECGOST3410-2012-256", "1.2.643.7.1.1.1.1", DIGEST_GOST2012_256, "SignatureType.ECGOST2012SignatureSpi256Hash");
 	// @formatter:on
 
 	private static ResourceBundle res = ResourceBundle.getBundle("org/kse/crypto/signing/resources");
@@ -78,6 +70,15 @@ public enum SignatureType {
 		this.oid = oid;
 		this.digestType = digestType;
 		this.friendlyKey = friendlyKey;
+	}
+
+	public static List<SignatureType> gostSignatureTypes() {
+		List<SignatureType> signatureTypes = new ArrayList<>();
+
+		signatureTypes.add(GOST3411_2012);
+
+
+		return signatureTypes;
 	}
 
 	/**
