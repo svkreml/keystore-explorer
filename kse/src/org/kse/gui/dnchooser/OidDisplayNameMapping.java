@@ -52,6 +52,7 @@ public class OidDisplayNameMapping {
     private static final String OGRNIP = res.getString("DistinguishedNameChooser.jlOGRNIP.text");
     private static final String SNILS = res.getString("DistinguishedNameChooser.jlSNILS.text");
     private static final String STREET = res.getString("DistinguishedNameChooser.jlSTREET.text");
+    private static final String T = res.getString("DistinguishedNameChooser.jlT.text");
 
 
     private static Map<String, ASN1ObjectIdentifier> displayNameToOID = new HashMap<>();
@@ -76,6 +77,8 @@ public class OidDisplayNameMapping {
         displayNameToOID.put(OGRNIP, KseX500NameStyle.OGRNIP);
         displayNameToOID.put(SNILS, KseX500NameStyle.SNILS);
         displayNameToOID.put(STREET, KseX500NameStyle.STREET);
+
+        displayNameToOID.put(T, KseX500NameStyle.T);
     }
 
     private static Map<String, String> oidToDisplayName = new HashMap<>();
@@ -101,10 +104,12 @@ public class OidDisplayNameMapping {
         oidToDisplayName.put(KseX500NameStyle.OGRNIP.getId(), OGRNIP);
         oidToDisplayName.put(KseX500NameStyle.SNILS.getId(), SNILS);
         oidToDisplayName.put(KseX500NameStyle.STREET.getId(), STREET);
+
+        oidToDisplayName.put(KseX500NameStyle.T.getId(), T);
     }
 
     public static String[] getDisplayNames() {
-        return new String[]{CN, OU, O, L, ST, C, E, SN, GIVENNAME, SURNAME, DC, UID, INN, OGRN, OGRNIP, SNILS, STREET};
+        return new String[]{CN, OU, O, L, ST, C, E, SN, GIVENNAME, SURNAME, DC, UID, INN, OGRN, OGRNIP, SNILS, STREET, T};
     }
 
     public static ASN1ObjectIdentifier getOidForDisplayName(String displayName) {

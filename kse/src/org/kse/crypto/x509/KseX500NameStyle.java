@@ -52,10 +52,10 @@ public class KseX500NameStyle extends BCStyle {
 	public static final ASN1ObjectIdentifier INN = (new ASN1ObjectIdentifier("1.2.643.3.131.1.1")).intern();
 
 	static {
-		DEFAULT_SYMBOLS.put(OGRN, "ОГРН");
-		DEFAULT_SYMBOLS.put(INN, "ИНН");
-		DEFAULT_SYMBOLS.put(SNILS, "СНИЛС");
-		DEFAULT_SYMBOLS.put(OGRNIP, "ОГРНИП");
+		DEFAULT_SYMBOLS.put(OGRN, "OGRN");
+		DEFAULT_SYMBOLS.put(INN, "INN");
+		DEFAULT_SYMBOLS.put(SNILS, "SNILS");
+		DEFAULT_SYMBOLS.put(OGRNIP, "OGRNIP");
 
 
 		DEFAULT_SYMBOLS.put(C, "C");
@@ -149,7 +149,13 @@ public class KseX500NameStyle extends BCStyle {
 			return DNQ;
 		}
 
-		return super.attrNameToOID(attrName);
+		return attrNameToOIDInner(attrName);
+	}
+
+
+	public ASN1ObjectIdentifier attrNameToOIDInner(String attrName)
+	{
+		return IETFUtils.decodeAttrName(attrName, DefaultLookUp);
 	}
 
 	@Override
